@@ -63,9 +63,17 @@ echo "git clone git://git.yoctoproject.org/poky"
 sleep 3
 cd poky    # Poky - Стандартное название, лучше не менять
 echo "cd poky"
-source oe-init-build-env
-mkdir build
-echo "source oe-init-build-env"
+sleep 3
+source oe-init-build-env build
+
+
+#mkdir build
+#sleep 3
+#chmod +x /poky/build
+#sleep 3
+#chmod -R 777 /poky/build
+
+#echo "source oe-init-build-env"
 
 
 sleep 3
@@ -78,6 +86,7 @@ mainn
 
 ### - 2  УСТАНОВКА ЛОКАЛИ ----------------
 function fnlocale() {
+sleep 3
 # localectl set-locale LC_TIME=en_US.UTF-8
 #localectl set-locale LC_TIME=en_US.UTF-8
 #echo "localectl set-locale LC_TIME=en_US.UTF-8"
@@ -96,6 +105,7 @@ echo "en_US.UTF-8" >> /etc/default/locale
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+#export bitbake=/poky/build/bitbake/bitbake
 
 #RUN localectl set-locale LANG=en_IN.UTF-8
 
@@ -110,7 +120,7 @@ mainn
 
 ### - 3 ВЫБОРЫ В BITBAKE -----------------
 function fnbitbake() {
-source oe-init-build-env
+#source oe-init-build-env
 echo " Выберите свой вариант установки..."
 echo " 1 - bitbake core-image-minimal "
 echo " 2 - bitbake core-image-full-cmdline "
@@ -119,6 +129,9 @@ echo " 4 - bitbake core-image-weston "
 echo " 5 - bitbake meta-toolchain "
 echo " 6 - bitbake meta-ide-support "
 echo " 7 - Главное меню "
+
+#cd /poky/build/bitbake
+
 
 read num
 
@@ -171,6 +184,23 @@ exit 0
 }
 
 
+### - 0 bin/bash
+function fnzero() { 
+
+ls /
+
+ls /poky
+
+ls /poky/build
+
+ls /poky/build/bitbake
+
+cd /bin
+start mc
+
+mainn
+}
+
 
 function mainn() {
 echo " 1 - Git clone yocto from yoctoproject.org  "
@@ -182,7 +212,7 @@ echo " 6 - Главное меню  "
 echo " 7 - Uptime and df / "
 echo " 8 - Запуск образа в qemu " 
 echo " 9 - bitbake-layers show-layers"
-
+echo " 0 - bin/bash"
 
 
 
@@ -213,6 +243,8 @@ case $number in
 8) runimage
 ;;
 9) showlayers
+;;
+0) fnzero 
 ;;
 
 *) mainn
