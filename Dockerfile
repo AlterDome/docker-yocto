@@ -1,6 +1,13 @@
 #
+#  docker buildx build -t 111 .
+#  docker images
+#  docker run 
+#  docker run -it 1  # -it запуск множества раз в интерактивном режиме
 #
-#  Make yocto poky in Docker conteiner
+#
+#Make yocto poky in Docker conteiner
+#
+#
 #
 #  Author Rybochkin Aleksei
 #  August 2025
@@ -61,13 +68,13 @@ RUN apt-get install libkrb5support0 liblocale-gettext-perl liblockfile-bin liblz
 #RUN apt-get install libsystemd0 libtasn1-6 libtext-charwidth-perl libtext-iconv-perl libtext-wrapi18n-perl -y
 #RUN apt-get install libtinfo6 libtirpc-common libtirpc3 libudev1 libunistring2 libuuid1 libxtables12 libxxhash0 -y
 #RUN apt-get install libzstd1 locales login logrotate logsave lsof lz4 lzma make makepp -y
-RUN apt-get install mawk mc mime-support mount nano nasm -y
+#RUN apt-get install mawk mc mime-support mount nano nasm -y
 RUN apt-get install netbase netcat-traditional nftables ninja-build -y
 RUN apt-get install openssh-client passwd perl perl-base -y
 RUN apt-get install procps pylint python-is-python3 python3 python3-git python3-jinja2 python3-pexpect -y
 RUN apt-get install python3-pip python3-pylint-common python3-pylint-plugin-utils python3-pytest-pylint -y
 RUN apt-get install python3-reportbug python3-saltpylint readline-common -y
-RUN apt-get install searx sed sensible-utils shim-signed socat -y
+#RUN apt-get install searx sed sensible-utils shim-signed socat -y
 RUN apt-get install systemd systemd-sysv systemd-timesyncd sysvinit-utils tar dbus -y
 
 RUN apt-get install tasksel tasksel-data -y
@@ -93,24 +100,44 @@ RUN export LC_ALL=en_US.UTF-8
 #RUN locale-gen
 RUN update-locale
 
+RUN mkdir /poky
+RUN mkdir /poky/build
 
-# Create workdir
+########################### Create workdir
 WORKDIR /poky
 
-RUN adduser --shell /bin/bash alex
+#RUN adduser --shell /bin/bash root
 
-RUN su alex
+RUN su root
 
 COPY ./111.sh /poky/111.sh
-COPY ./poky /poky/poky
+#COPY ./poky /poky
+
+# chmod 755 - права на исполнение
+RUN chmod -R 755 /bin 
+RUN chmod -R 755 /poky
+RUN chmod -R 755 /poky/build
+RUN chmod +x /poky/build
+
+RUN chmod +x -R /poky
+RUN chmod +x /poky/111.sh
 
 
+##############################  ENV
 
-RUN chmod -R 777 /poky
-RUN chmod +x /poky/
+#ENV bitbake=/poky/build/bitbake/bitbake
+
+
 
 #RUN su alex
-#EXPOSE 80
+# native git
+EXPOSE 9418 
+# native ssh
+EXPOSE 22
+EXPOSE 80
+EXPOSE 443
 
 # Start script
-CMD ["start /bin/bash ./111.sh"]
+ENTRYPOINT ["/bin/bash"]
+#CMD ["bash","/poky/111.sh"]
+CMD ["/poky/111.sh"]
